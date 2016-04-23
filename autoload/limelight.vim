@@ -156,23 +156,26 @@ function! s:dim(coeff)
     endif
     execute printf('hi LimelightDim guifg=%s guisp=bg', dim)
   elseif &t_Co == 256
-    if a:coeff < 0 && exists('g:limelight_conceal_ctermfg')
-      let dim = g:limelight_conceal_ctermfg
-    elseif fg <= -1 || bg <= -1
-      throw s:unsupported()
-    else
-      let coeff = s:coeff(a:coeff)
-      let fg = s:gray_contiguous(fg)
-      let bg = s:gray_contiguous(bg)
-      let dim = s:gray_ansi(float2nr(bg * coeff + fg * (1 - coeff)))
-    endif
-    if type(dim) == 1
-      execute printf('hi LimelightDim ctermfg=%s', dim)
-    else
-      execute printf('hi LimelightDim ctermfg=%d', dim)
-    endif
+      if empty(fg)
+          let fg = 250
+      endif
+      if a:coeff < 0 && exists('g:limelight_conceal_ctermfg')
+          let dim = g:limelight_conceal_ctermfg
+      elseif fg <= -1 || bg <= -1
+          throw s:unsupported()
+      else
+          let coeff = s:coeff(a:coeff)
+          let fg = s:gray_contiguous(fg)
+          let bg = s:gray_contiguous(bg)
+          let dim = s:gray_ansi(float2nr(bg * coeff + fg * (1 - coeff)))
+      endif
+      if type(dim) == 1
+          execute printf('hi LimelightDim ctermfg=%s', dim)
+      else
+          execute printf('hi LimelightDim ctermfg=%d', dim)
+      endif
   else
-    throw 'Unsupported terminal. Sorry.'
+      throw 'Unsupported terminal. Sorry.'
   endif
 endfunction
 
